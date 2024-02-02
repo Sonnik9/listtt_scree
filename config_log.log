@@ -1,0 +1,28 @@
+ERROR:asyncio:_GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=CancelledError()>
+Traceback (most recent call last):
+  File "/home/kali/Desktop/ALL_PROJECT/TREADING/LISTING_SCREENER_S_BOT/main.py", line 158, in <module>
+    asyncio.run(mainnn.main_controller())
+  File "/usr/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 653, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/kali/Desktop/ALL_PROJECT/TREADING/LISTING_SCREENER_S_BOT/main.py", line 146, in main_controller
+    if return_sell_orders_controller and return_sell_orders_controller.done():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'return_sell_orders_controller' where it is not associated with a value
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kali/Desktop/ALL_PROJECT/TREADING/LISTING_SCREENER_S_BOT/main.py", line 53, in run_screener
+    await asyncio.sleep(10)
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 649, in sleep
+    return await future
+           ^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
