@@ -35,23 +35,23 @@
     
 
 
-max_price = 0.872
-cur_price = 0.621
-enter_price = 0.03
+# max_price = 0.872
+# cur_price = 0.621
+# enter_price = 0.03
 
-max_price = 0.58
-cur_price = 0.4863
-enter_price = 0.371
+# max_price = 0.58
+# cur_price = 0.4863
+# enter_price = 0.371
 
-# per_change = 100 - ((cur_price*100)/(max_price - enter_price))
-# per_change_2 = (1 - (cur_price/max_price)) * 100
-# per_change_3 = ((max_price - cur_price)/max_price)*100
-per_change_4 = ((max_price - cur_price)/(max_price - enter_price))*100
-# print(per_change)
-# print(per_change_2)
-# print(per_change_3)
-print(per_change_4)
-# 
+# # per_change = 100 - ((cur_price*100)/(max_price - enter_price))
+# # per_change_2 = (1 - (cur_price/max_price)) * 100
+# # per_change_3 = ((max_price - cur_price)/max_price)*100
+# per_change_4 = ((max_price - cur_price)/(max_price - enter_price))*100
+# # print(per_change)
+# # print(per_change_2)
+# # print(per_change_3)
+# print(per_change_4)
+# # 
 
 
 

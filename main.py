@@ -83,7 +83,8 @@ class MAINN(UTILS_API):
                         price_symbol_list[i]["cur_price"] = await self.get_current_price(symbol)
                         price_symbol_list[i]["price_history_list"].append(price_symbol_list[i]["cur_price"])
                         price_symbol_list[i]["max_price"] = max(price_symbol_list[i]["price_history_list"])
-                        if (((price_symbol_list[i]["max_price"] - price_symbol_list[i]["cur_price"])/price_symbol_list[i]["max_price"]) * 100) >= 7:
+                        
+                        if ((price_symbol_list[i]["max_price"] - price_symbol_list[i]["cur_price"])/(price_symbol_list[i]["max_price"] - enter_price)) * 100 >= 7:
                             tp_condition_1 = True
                         if price_symbol_list[i]["cur_price"] >= enter_price * 49:
                             tp_condition_2 = True
