@@ -192,26 +192,4 @@ class UTILS_API(POST_API):
         return quantity, price_precision
     
 # ///////////////////////////////////////////////////////////////////////////////////
-    async def market_order_temp_func(self, symbol, is_selling, depo):
-        item = {}        
-        item["symbol"] = symbol       
-        open_market_order = None
-        # ////////////////////////
-        depo = self.depo
-        # ////////////////////////
 
-        try:                    
-            item['qnt'], _ = await self.calc_qnt_func(symbol, depo)
-            # print(f"{symbol}: item['qnt']: {item['qnt']}")        
-            # print(f"{symbol}: item['item['price_precision']']: {item['price_precision']}") 
-            if item['qnt']:
-                
-                success_flag = False
-                market_type = 'MARKET'
-                target_price = None       
-                open_market_order, success_flag = await self.make_order(item, is_selling, target_price, market_type)
-                print(f"open_market_order:  {open_market_order}") 
-        except Exception as ex:
-            logging.exception(f"An error occurred in file '{current_file}', line {inspect.currentframe().f_lineno}: {ex}")
-
-        return open_market_order, success_flag
