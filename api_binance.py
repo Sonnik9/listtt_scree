@@ -58,13 +58,16 @@ class GET_API(CONFIG_API):
     def __init__(self) -> None:
         super().__init__()        
 
-    async def get_exchange_info(self):  
+    async def get_exchange_info(self, symbol):  
 
         exchangeInfo = None
+        params = {}
 
         try:
-            url = self.URL_PATTERN_DICT['exchangeInfo_url']        
-            exchangeInfo = await self.HTTP_request(url, method='GET', headers=self.header)
+            url = self.URL_PATTERN_DICT['exchangeInfo_url']  
+            if symbol:
+                params = {'symbol': symbol}      
+            exchangeInfo = await self.HTTP_request(url, method='GET', params=params)
         except Exception as ex:
             logging.exception(f"An error occurred in file '{current_file}', line {inspect.currentframe().f_lineno}: {ex}")
 
@@ -89,24 +92,17 @@ class POST_API(GET_API):
     def __init__(self) -> None:
         super().__init__()
 
-    async def make_order(self, item, is_selling, target_price, market_type):
+    async def make_market_order(self, symbol, qnt, is_selling):
                 
         response = None
         success_flag = False
         try:
             url = self.URL_PATTERN_DICT['create_order_url']
-            # print(url)
+            print(url)
             params = {}        
-            params["symbol"] = item["symbol"]   
-            # print(params["symbol"])  
-            params["type"] = market_type
-            # print(params["type"])  
-            params["quantity"] = item['qnt']      
-        
-            if market_type == 'LIMIT':            
-                params["price"] = target_price
-                params["timeInForce"] = 'GTC' 
-                # params['recvWindow'] = 5000
+            params["symbol"] = symbol              
+            params["type"] = 'MARKET'             
+            params["quantity"] = qnt     
     
             if is_selling == 1:
                 side = 'BUY'
@@ -115,9 +111,9 @@ class POST_API(GET_API):
             params["side"] = side 
 
             params = await self.get_signature(params)
-            # print(params)
+            print(params)
             response = await self.HTTP_request(url, method='POST', headers=self.header, params=params)
-            # print(response)
+            print(response)
             if response and 'clientOrderId' in response and response['side'] == side:
                 success_flag = True
         except Exception as ex:
