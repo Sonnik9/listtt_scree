@@ -1,37 +1,37 @@
-# # # import requests
-# # # import time
+import requests
+import time
 
-# # # api_key = "vPlx4lmDIcgMT6QcUhvW0yoNHgXawtKQrqmwOgCEneoNtRbe9JmT1qVdo1WUZjAr" # real
-# # # secret_key = "lll0IA6Gyqf2vn2qijISrzjf5ru99Z6hbnFE20SJxP1kIKr5czyHxPJeYnlHSzwE" # real
-# # # base_url = 'https://api.binance.com/api/v3'
+api_key = "vPlx4lmDIcgMT6QcUhvW0yoNHgXawtKQrqmwOgCEneoNtRbe9JmT1qVdo1WUZjAr" # real
+secret_key = "lll0IA6Gyqf2vn2qijISrzjf5ru99Z6hbnFE20SJxP1kIKr5czyHxPJeYnlHSzwE" # real
+base_url = 'https://api.binance.com/api/v3'
 
-# # # def get_upcoming_listings():
-# # #     coins_candidate_list = []
-# # #     coins_candidateInfo_list = []
-# # #     endpoint = '/exchangeInfo'    
-# # #     url = f'{base_url}{endpoint}'
+def get_upcoming_listings():
+    coins_candidate_list = []
+    coins_candidateInfo_list = []
+    endpoint = '/exchangeInfo'    
+    url = f'{base_url}{endpoint}'
 
-# # #     try:
-# # #         response = requests.get(url)
-# # #         data = response.json()
+    try:
+        response = requests.get(url)
+        data = response.json()
 
-# # #         for i, symbol_info in enumerate(data['symbols']):
-# # #             symbol = symbol_info['symbol']
+        for i, symbol_info in enumerate(data['symbols']):
+            symbol = symbol_info['symbol']
             
-# # #             if (symbol_info['status'] != 'TRADING' and symbol_info['status'] != 'BREAK') or symbol_info['status'] == 'PRE_TRADING':
-# # #                 # coins_candidate_list.append(symbol)
-# # #                 coins_candidateInfo_list.append(symbol_info)
+            if (symbol_info['status'] != 'TRADING' and symbol_info['status'] != 'BREAK') or symbol_info['status'] == 'PRE_TRADING':
+                # coins_candidate_list.append(symbol)
+                coins_candidateInfo_list.append(symbol_info)
 
-# # #         print(f"Обнаружено {len(coins_candidateInfo_list)} новых монета в предстоящем листинге!")
-# # #         print(f"Например: {coins_candidateInfo_list[0]['symbol']}: {coins_candidateInfo_list[0]}")
+        print(f"Обнаружено {len(coins_candidateInfo_list)} новых монета в предстоящем листинге!")
+        print(f"Например: {coins_candidateInfo_list[0]['symbol']}: {coins_candidateInfo_list[0]}")
 
         
 
-# # #     except Exception as e:
-# # #         print(f"Произошла ошибка: {e}")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
 
-# # # if __name__ == "__main__":
-# # #     get_upcoming_listings()
+if __name__ == "__main__":
+    get_upcoming_listings()
     
 
 

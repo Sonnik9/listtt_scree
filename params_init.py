@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging, os, inspect
 from dotenv import load_dotenv
 
@@ -13,10 +14,15 @@ class BASIC_PARAMETRS():
         self.market = 'spot'
                 
     def init_api_key(self):
-        self.tg_api_token = os.getenv("TG_API_TOKEN", "")
-        self.api_key  = os.getenv(f"BINANCE_API_PUBLIC_KEY", "")
-        self.api_secret = os.getenv(f"BINANCE_API_PRIVATE_KEY", "") 
-        self.seq_control_token = os.getenv(f"SEQ_TOKEN", "")
+        keyy_str = os.getenv('keyy', '')
+        self.keyy = json.loads(keyy_str) if keyy_str else {}
+
+        self.tg_api_token = self.keyy["TG_API_TOKEN"]
+        self.api_key = self.keyy["BINANCE_API_PUBLIC_KEY"]
+        self.api_secret = self.keyy["BINANCE_API_PRIVATE_KEY"]
+        # print(self.api_key) 
+        # print(self.api_secret) 
+        self.seq_control_token = self.keyy["SEQ_TOKEN"]
         self.header = {
             'X-MBX-APIKEY': self.api_key
         }    
@@ -49,16 +55,32 @@ class RISKK(URL_TEMPLATES):
 class ORDER_PARAMS(RISKK):
     def __init__(self) -> None:
         super().__init__()
-        self.depo = '7usdt' # usdt
+        self.qnt = 0.00017
+        self.depo = '7usdt'
+        self.is_make_sell_logic_flag = False
+        # self.depo = '330usdt' # usdt
 
-class OTHERSS(ORDER_PARAMS):
+class TG_INIT_VAR(ORDER_PARAMS):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def init_tg_var(self):
+        self.block_acess_flag = False
+        self.start_day_date = False
+        self.start_flag = False
+        self.dont_seq_control = False
+        self.seq_control_flag = False
+        self.depo_redirect_flag = False
+        self.block_acess_counter = 0
+
+class OTHERSS(TG_INIT_VAR):
     def __init__(self) -> None:
         super().__init__()
 
     def others_init(self):
         self.buy_sell_tumbler = asyncio.Lock()
         self.stop_cycle = False
-        self.x_percentage_ceiling = 49
+        self.waiting_toselling_time = 59
 
 class INIT_PARAMS(OTHERSS):
     def __init__(self) -> None:
@@ -66,11 +88,12 @@ class INIT_PARAMS(OTHERSS):
         self.init_itits()
 
     def init_itits(self):
-        print('helloo')
+        print('helloo1')
         self.init_api_key()       
         self.init_urls()   
         self.risk_init()   
         self.others_init()   
+        self.init_tg_var()
 
 # params = INIT_PARAMS()
 # print(params.test_flag)

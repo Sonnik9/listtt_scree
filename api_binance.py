@@ -1,9 +1,6 @@
-from params_init import INIT_PARAMS
+# from params_init import INIT_PARAMS
+from connector import TG_ASSISTENT
 import math
-import time
-import hmac
-import hashlib
-import requests
 # import ccxt
 import logging, os, inspect
 from dotenv import load_dotenv
@@ -11,50 +8,9 @@ from dotenv import load_dotenv
 logging.basicConfig(filename='config_log.log', level=logging.INFO)
 current_file = os.path.basename(__file__)
 
-load_dotenv()
+# load_dotenv()
 
-class CONFIG_API(INIT_PARAMS):
-
-    def __init__(self) -> None:
-        super().__init__()
-
-    async def get_signature(self, params):
-        try:
-            params['timestamp'] = int(time.time() *1000)
-            params_str = '&'.join([f'{k}={v}' for k,v in params.items()])
-            hash = hmac.new(bytes(self.api_secret, 'utf-8'), params_str.encode('utf-8'), hashlib.sha256)        
-            params['signature'] = hash.hexdigest()
-        except Exception as ex:
-            logging.error(f"An error occurred in file '{current_file}', line {inspect.currentframe().f_lineno}: {ex}") 
-
-        return params
-   
-    async def HTTP_request(self, url, **kwards):
-
-        response = None
-        multipliter = 2
-
-        for i in range(2):
-            try:
-                # print('hi')
-                response = requests.request(url=url, **kwards)
-                # print(response)
-                if response.status_code == 200:
-                    break
-                else:
-                    time.sleep((i+1) * multipliter)              
-   
-            except Exception as ex:
-                logging.error(f"An error occurred in file '{current_file}', line {inspect.currentframe().f_lineno}: {ex}") 
-                time.sleep((i+1) * multipliter)
-        try:
-            response = response.json()
-        except:
-            pass
-
-        return response
-
-class GET_API(CONFIG_API):
+class GET_API(TG_ASSISTENT):
     def __init__(self) -> None:
         super().__init__()        
 
@@ -92,28 +48,23 @@ class POST_API(GET_API):
     def __init__(self) -> None:
         super().__init__()
 
-    async def make_market_order(self, symbol, qnt, is_selling):
+    async def make_market_order(self, symbol, qnt, side):
                 
         response = None
         success_flag = False
         try:
             url = self.URL_PATTERN_DICT['create_order_url']
-            print(url)
+            # print(url)
             params = {}        
             params["symbol"] = symbol              
             params["type"] = 'MARKET'             
             params["quantity"] = qnt     
-    
-            if is_selling == 1:
-                side = 'BUY'
-            elif is_selling == -1:
-                side = "SELL" 
             params["side"] = side 
 
             params = await self.get_signature(params)
-            print(params)
+            # print(params)
             response = await self.HTTP_request(url, method='POST', headers=self.header, params=params)
-            print(response)
+            # print(response)
             if response and 'clientOrderId' in response and response['side'] == side:
                 success_flag = True
         except Exception as ex:
@@ -148,11 +99,11 @@ class UTILS_API(POST_API):
 
             if depo.endswith('USDT'):
                 depo = float(depo.replace('USDT', '').strip())
-                print(f'depo*2: {depo*2}')
+                # print(f'depo*2: {depo*2}')
                 usdt_flag = True
             elif depo.endswith(f"{symbol.replace('USDT', '').strip()}"):           
                 qnt = float(depo.replace(f"{symbol.replace('USDT', '').strip()}", '').strip())
-                print(f'qnt*2: {qnt*2}')
+                # print(f'qnt*2: {qnt*2}')
 
             symbol_info = await self.get_exchange_info(symbol)
 
@@ -164,7 +115,7 @@ class UTILS_API(POST_API):
                 lot_size_filter = next((f for f in symbol_data.get('filters', []) if f.get('filterType') == 'LOT_SIZE'), None)
                 if lot_size_filter:
                     quantity_precision = -int(math.log10(float(lot_size_filter.get('stepSize', '1'))))
-                    print(f"quantity_precision: {quantity_precision}")
+                    # print(f"quantity_precision: {quantity_precision}")
 
                 minNotional = float(next((f['minNotional'] for f in symbol_data['filters'] if f['filterType'] == 'NOTIONAL'), None))
                 maxNotional = float(next((f['maxNotional'] for f in symbol_data['filters'] if f['filterType'] == 'NOTIONAL'), None))
